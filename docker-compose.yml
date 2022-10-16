@@ -1,0 +1,56 @@
+---
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server:java17-alpine
+    ports:
+      - 8192:8192
+      - 25565:25565
+    environment:
+      MEMORY: "8G"
+      EULA: "TRUE"
+      VERSION: "LATEST"
+      TYPE: "PAPER"
+      TZ: "US/Central"
+
+      OVERRIDE_SERVER_PROPERTIES: true
+      MOTD: "automated §n§l§cgamer cube land§r"
+      DIFFICULTY: "normal"
+      PVP: false
+      SPAWN_PROTECTION: 0
+      MAX_TICK_TIME: -1
+      # ENFORCE_WHITELIST: true
+      MAX_PLAYERS: 10
+      MAX_WORLD_SIZE: 10000
+      SNOOPER_ENABLED: false
+      LEVEL_TYPE: "minecraft:amplified"
+      LEVEL: "leko"
+      ALLOW_FLIGHT: true
+      SERVER_NAME: "gregcraft"
+
+      RCON_CMDS_STARTUP: |-
+        gamerule keepInventory true
+      ENABLE_ROLLING_LOGS: true
+      ENABLE_AUTOPAUSE: true
+
+      SPIGET_RESOURCES: "274,28140,34315,39965"
+      MODS: "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsX-2.19.7.jar"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    volumes:
+      - mc:/data
+      - ./plugins:/plugins
+
+  backups:
+    image: itzg/mc-backup
+    environment:
+      BACKUP_INTERVAL: "2h"
+    volumes:
+      - mc:/data:ro
+      - ./temp:/backups
+    network_mode: "service:mc"
+
+volumes:
+  mc: {}

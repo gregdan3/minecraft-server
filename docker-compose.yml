@@ -3,20 +3,20 @@ version: "3.8"
 services:
   mc:
     image: itzg/minecraft-server:java17-alpine
-    container_name: mc
+    container_name: sibling-mc
     ports:
       - 8192:8192
       - 25565:25565
     environment:
       MEMORY: "8G"
       EULA: "TRUE"
-      VERSION: "LATEST"
-      TYPE: "PAPER"
+      VERSION: "1.19" # never update
+      TYPE: "PAPER" # TODO: Folia: https://github.com/PaperMC/Folia
       TZ: "US/Central"
 
       OVERRIDE_SERVER_PROPERTIES: "TRUE"
       MOTD: "automated §n§l§cgamer cube land§r"
-      DIFFICULTY: "normal"
+      DIFFICULTY: "hard"
       PVP: "FALSE"
       SPAWN_PROTECTION: 0
       # MAX_TICK_TIME: -1
@@ -24,18 +24,20 @@ services:
       MAX_PLAYERS: 10
       MAX_WORLD_SIZE: 10000
       SNOOPER_ENABLED: "FALSE"
-      LEVEL_TYPE: "minecraft:amplified"
+      # LEVEL_TYPE: "minecraft:amplified"
       LEVEL: "leko"
       ALLOW_FLIGHT: "TRUE"
       SERVER_NAME: "gregcraft"
-
       RCON_CMDS_STARTUP: |-
         gamerule keepInventory true
+      # sibling request
       ENABLE_ROLLING_LOGS: "TRUE"
-      ENABLE_AUTOPAUSE: "FALSE"
+      ENABLE_AUTOPAUSE: "FALSE" # enabling can cause healthcheck fail
 
-      SPIGET_RESOURCES: "274,28140,34315,39965"
-      MODS: "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsX-2.19.7.jar"
+      SPIGET_RESOURCES: "28140,34315,39965"
+      # 274 is dynmap
+      # vault luckperms smoothtimber
+      MODS: "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsX-2.19.7.jar,https://dynmap.us/builds/dynmap/Dynmap-3.5-beta-3-spigot.jar"
     tty: true
     stdin_open: true
     restart: unless-stopped

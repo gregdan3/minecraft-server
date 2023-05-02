@@ -5,7 +5,7 @@ services:
     image: itzg/minecraft-server:java17-alpine
     container_name: sibling-mc
     ports:
-      - 8192:8192
+      - 8123:8123
       - 25565:25565
     environment:
       MEMORY: "8G"

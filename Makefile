@@ -6,6 +6,9 @@ up:
 down:
 	DOCKER_CONTEXT=${DOCKER_CONTEXT} docker compose down
 
+stop:
+	DOCKER_CONTEXT=${DOCKER_CONTEXT} docker compose stop
+
 rm:
 	DOCKER_CONTEXT=${DOCKER_CONTEXT} docker compose rm
 

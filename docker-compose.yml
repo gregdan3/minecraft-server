@@ -1,43 +1,71 @@
 ---
-version: "3.8"
 services:
   mc:
-    image: itzg/minecraft-server:java17-alpine
-    container_name: sibling-mc
+    image: itzg/minecraft-server:java17-graalvm
+    container_name: mc1171_2024_04_21
     ports:
       - 8123:8123
       - 25565:25565
     environment:
-      MEMORY: "8G"
-      EULA: "TRUE"
-      VERSION: "1.19" # never update
-      TYPE: "PAPER" # TODO: Folia: https://github.com/PaperMC/Folia
+      EULA: true
+      VERSION: "1.17.1"
+      TYPE: "PAPER"
       TZ: "US/Central"
 
-      OVERRIDE_SERVER_PROPERTIES: "TRUE"
-      MOTD: "automated §n§l§cgamer cube land§r"
-      DIFFICULTY: "hard"
-      PVP: "FALSE"
+      MEMORY: "8G"
+      USE_AIKAR_FLAGS: true
+
+      LEVEL: "greg zone (grone)"
+      SERVER_NAME: "greg zone (grone)"
+      MOTD: "no time to explain. get in the greg zone (grone)"
+      SEED: "-7236274518863305115"
+      OVERRIDE_SERVER_PROPERTIES: true
+
+      VIEW_DISTANCE: 16
+      SIMULATION_DISTANCE: 16
+      MAX_WORLD_SIZE: 5000
       SPAWN_PROTECTION: 0
-      # MAX_TICK_TIME: -1
-      # ENFORCE_WHITELIST: true
+      PLAYER_IDLE_TIMEOUT: 10
+
       MAX_PLAYERS: 10
-      MAX_WORLD_SIZE: 10000
-      SNOOPER_ENABLED: "FALSE"
-      # LEVEL_TYPE: "minecraft:amplified"
-      LEVEL: "leko"
-      ALLOW_FLIGHT: "TRUE"
-      SERVER_NAME: "gregcraft"
+      ENFORCE_WHITELIST: true
+      WHITELIST: |
+        gregdan3
+        brail_n
+        Cakeperson35
+        Raylazzerkitty
+        Mistyforest0322
+
+      DIFFICULTY: "hard"
+      PVP: false
+      GENERATE_STRUCTURES: false
+      SPAWN_ANIMALS: true
+      SPAWN_NPCS: false
+      ALLOW_FLIGHT: false
       RCON_CMDS_STARTUP: |-
         gamerule keepInventory true
-      # sibling request
-      ENABLE_ROLLING_LOGS: "TRUE"
-      ENABLE_AUTOPAUSE: "FALSE" # enabling can cause healthcheck fail
+        gamerule disableRaids true
+        gamerule doInsomnia false
+        gamerule doTraderSpawning false
+        gamerule globalSoundEvents false
+        gamerule lavaSourceConversion true
+        gamerule maxEntityCramming 999
+        gamerule mobExplosionDropDecay false
+        gamerule tntExplosionDropDecay false
+        gamerule playersSleepingPercentage 60
+        gamerule snowAccumulationHeight 6
+        gamerule spawnRadius 0
+
+      SNOOPER_ENABLED: false
+      ENABLE_COMMAND_BLOCKS: false
+      ENABLE_ROLLING_LOGS: true
+      ENABLE_AUTOPAUSE: false # enabling can cause healthcheck fail
+      ENABLE_RCON: true
+      RCON_PORT: 25575
 
       SPIGET_RESOURCES: "28140,34315,39965"
-      # 274 is dynmap
-      # vault luckperms smoothtimber
-      MODS: "https://github.com/EssentialsX/Essentials/releases/download/2.19.7/EssentialsX-2.19.7.jar,https://dynmap.us/builds/dynmap/Dynmap-3.5-beta-3-spigot.jar"
+      # dynmap is 274 and missing, EssentialsX, vault, luckperms, smoothtimber
+      MODS: "https://github.com/EssentialsX/Essentials/releases/download/2.20.1/EssentialsX-2.20.1.jar,https://dev.bukkit.org/projects/dynmap/files/3670362/download"
     tty: true
     stdin_open: true
     restart: unless-stopped
@@ -47,10 +75,12 @@ services:
   backups:
     image: itzg/mc-backup
     environment:
-      BACKUP_INTERVAL: "2h"
+      BACKUP_INTERVAL: "24h"
+      PAUSE_IF_NO_PLAYERS: true
+      LINK_LATEST: true
     volumes:
       - mc:/data:ro
-      - /data:/backups
+      - /data-mc1171-2024:/backups
     network_mode: "service:mc"
 
 volumes:
